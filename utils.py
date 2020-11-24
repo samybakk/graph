@@ -21,4 +21,4 @@ def lecture(file_name):
             results = list(map(int, results))
             liste2.append(results)
 
-    return liste1, liste2,
+    return liste1, liste2

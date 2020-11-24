@@ -1,2 +1,3 @@
 if __name__ == '__main__':
-    print('Samy is gay')
+    for _ in range (50) :
+        print('178 ouais !')

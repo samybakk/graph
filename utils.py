@@ -11,12 +11,15 @@ def lecture(file_name):
         for i in range(nbr):
             ligne = f.readline()
             elem = ligne.split()
+            elem[i] = 1000000
             results = map(int, elem)
             results = list(map(int, results))
             ring_cost.append(results)
         for i in range(nbr):
             ligne = f.readline()
             elem = ligne.split()
+            if i ==0 :
+                elem = [1000000 for x in elem]
             elem[i]=1000000
             results = map(int, elem)
             results = list(map(int, results))

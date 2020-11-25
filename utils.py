@@ -17,8 +17,10 @@ def lecture(file_name):
         for i in range(nbr):
             ligne = f.readline()
             elem = ligne.split()
+            elem[i]=1000000
             results = map(int, elem)
             results = list(map(int, results))
+            
             liste2.append(results)
 
     return liste1, liste2

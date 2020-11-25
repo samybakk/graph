@@ -9,8 +9,9 @@ def f(X,liste1=liste1,liste2=liste2):
     
     for pos,x in enumerate(X) :
         if x ==1.0 :
+            pos_next = 0
             for y in range(pos,len(X)):
-                pos_next = 0
+                
                 if y ==1.0 :
                     pos_next = y
                     
@@ -18,8 +19,9 @@ def f(X,liste1=liste1,liste2=liste2):
             somme += liste1[pos][pos_next]
             
         else :
-            pos_next = min(liste2[pos])
+            pos_next = liste2[pos].index(min(liste2[pos]))
             connec[pos] = pos_next
+            #print(pos,pos_next)
             somme += liste2[pos][pos_next]
         
     
@@ -45,4 +47,4 @@ if __name__ == '__main__':
 
     model.run()
     
-    print(connec)
+    print("\n\n liste des connections : ",connec)

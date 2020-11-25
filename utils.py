@@ -1,7 +1,7 @@
 
 def lecture(file_name):
-    liste1= []
-    liste2= []
+    ring_cost = []
+    affectation_cost = []
     with open(file_name) as f:
         ligne = f.readline()
         elem = ligne.split()
@@ -13,12 +13,12 @@ def lecture(file_name):
             elem = ligne.split()
             results = map(int, elem)
             results = list(map(int, results))
-            liste1.append(results)
+            ring_cost.append(results)
         for i in range(nbr):
             ligne = f.readline()
             elem = ligne.split()
             results = map(int, elem)
             results = list(map(int, results))
-            liste2.append(results)
+            affectation_cost.append(results)
 
-    return liste1, liste2
+    return ring_cost, affectation_cost

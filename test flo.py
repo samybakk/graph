@@ -6,6 +6,7 @@ solution = []
 
 solution = full_ring(ring_cost)
 print(len(solution))
+"""
 print(len(ring_cost))
 print(solution)
-print(ring_cost)
+print(ring_cost)"""

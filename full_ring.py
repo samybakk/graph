@@ -13,5 +13,4 @@ def full_ring(ring_cost):
             elem = 1000000
         for elem in ring_cost:
             elem[sol[-2]-1] = 1000000
-
     return sol

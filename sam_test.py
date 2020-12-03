@@ -14,7 +14,7 @@ if __name__ == '__main__':
     
     egdes_nbr = len(ring)
     history = [ring]
-    for x in range (10) :
+    for x in range (10) : #while counter < n_generation
         print("epoch : ",str(x))
         
         

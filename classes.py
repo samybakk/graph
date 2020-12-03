@@ -1,11 +1,8 @@
 from full_ring import full_ring
 from utils import lecture
 import copy as cp
-<<<<<<< HEAD
 from random import randint, sample, random
-=======
-import random
->>>>>>> e38198f92f2263184c33f31c0b416ccacb373149
+
 
 class Ring_star:
 

@@ -20,6 +20,26 @@ class ring_star:
             self.score += min(assign_cost[edge - 1])
         return self.score
 
+    
+    
+class population :
+    def __init__(self,ring_stars):
+        self.ring_stars = ring_stars
+        
+    def add(self,ring_star):
+        self.ring_stars.append(ring_star)
+    
+    def remove_ring(self,ring_star):
+        self.ring_stars.remove(ring_star)
+
+    def get_best(self):
+        best = self.individuals[0]
+        for ring_star in self.individuals:
+            if ring_star.fitness > best.fitness:
+                best = ring_star
+    
+        return best
+        
 if __name__ == '__main__':
     liste1, liste2 = lecture("data1.dat")
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)

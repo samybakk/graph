@@ -1,6 +1,7 @@
 from full_ring import full_ring
 from utils import lecture
 import copy as cp
+import random
 
 class ring_star:
 
@@ -40,10 +41,32 @@ class population :
     def get_best(self):
         best = self.individuals[0]
         for ring_star in self.individuals:
-            if ring_star.fitness > best.fitness:
+            if ring_star.score > best.score:
                 best = ring_star
     
         return best
+    
+    
+    
+    
+def crossover(ring_star1,ring_star2):
+    nbr_edges = int(0.5*(len(ring_star1.in_ring)+len(ring_star2.in_ring)))
+    new_ring_star = ring_star([None for _ in range(nbr_edges)],[])
+    cut_pos = random.randint(0,min(len(ring_star1.in_ring)+len(ring_star2.in_ring)))
+    for i in range(cut_pos) :
+        new_ring_star.in_ring[i] = ring_star1[i]
+    
+    for i in range(cut_pos,nbr_edges-1) :
+        for j in ring_star2.in_ring :
+            if j not in new_ring_star.in_ring :
+                new_ring_star.in_ring[i] = ring_star2[j]
+        
+    new_ring_star.in_ring = [i for i in new_ring_star if i]
+    
+    new_ring_star.out_ring = [i for i in range(2,len(ring_star1.in_ring)+len(ring_star1.out_ring)) if i not in new_ring_star.in_ring]
+    
+    
+    return new_ring_star
         
 if __name__ == '__main__':
     liste1, liste2 = lecture("data1.dat")

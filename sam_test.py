@@ -1,14 +1,9 @@
 from full_ring import full_ring
 from evaluate import evaluate
-from utils import lecture
+from utils import lecture,evaluation
 import numpy as np
 import copy as cp
 
-
-
-
-    
- 
  
 if __name__ == '__main__':
     liste1, liste2 = lecture("data1.dat")
@@ -17,10 +12,11 @@ if __name__ == '__main__':
     print("initial ring : ",ring)
     
     
-    finished = False
+    egdes_nbr = len(ring)
+    history = [ring]
     for x in range (10) :
         print("epoch : ",str(x))
-        ring = ring [:-1]
+        
         
         score_list = []
         result_list = []
@@ -28,27 +24,30 @@ if __name__ == '__main__':
         
         
         for _ in range(99) :
-    
             
-            egdes_nbr = len(ring)
-            in_ring = [x for x in range(1,egdes_nbr+1) if x in ring]
-            out_ring = [x for x in range(1,egdes_nbr+1) if x not in ring]
+            ring = ring[1:-1]
             
-            
-            for edge in ring :
+            in_ring =  list(ring)
+            out_ring = [x for x in range(2,egdes_nbr) if x not in ring]
+
+            #in_ring = in_ring[1:]
+            for edge in range(2,egdes_nbr) :
                 
-                if np.random.random_sample() < 0.15 :
+                if np.random.random_sample() < 0.05 :
                     if edge in in_ring :
                         in_ring.remove(edge)
+                        out_ring.append(edge)
                     else :
                         in_ring.append(edge)
-                    
+                        out_ring.remove(edge)
             
-            in_ring = np.random.permutation(in_ring[1:])
+            
+            #in_ring = np.random.permutation(in_ring)
+            
             in_ring = np.insert(in_ring,0,1)
             in_ring = np.insert(in_ring,len(in_ring),1)
-            
-            
+
+            #print(in_ring, out_ring)
             score = evaluate(in_ring,out_ring,liste1,liste2)
             
             score_list.append(score)
@@ -57,4 +56,6 @@ if __name__ == '__main__':
         print('best child score : ',str(min(score_list)))
         best_child_index = score_list.index(min(score_list))
         ring = result_list[best_child_index][0]
+        
 
+    print('final ring : ', ring)

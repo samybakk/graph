@@ -20,6 +20,13 @@ class ring_star:
             self.score += min(assign_cost[edge - 1])
         return self.score
 
+    def swap(self, edge1, edge2):
+        index1 = self.in_ring.index(edge1)
+        index2 = self.in_ring.index(edge2)
+        tmp = self.in_ring[index1]
+        self.in_ring[index1] = self.in_ring[index2]
+        self.in_ring[index2] = tmp
+
 if __name__ == '__main__':
     liste1, liste2 = lecture("data1.dat")
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)

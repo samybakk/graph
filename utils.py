@@ -29,28 +29,21 @@ def lecture(file_name):
     return ring_cost, affectation_cost
 
 
-def evaluation(file_solution_name, ring_cost, affectation_cost):
+def evaluation(liste_ring,liste_affectation , ring_cost, affectation_cost):
     """
 
-    :param file_solution_name: la liste des sommet du ring dans l'ordre SANS LE 1 A LA FIN !!!!!
     :param ring_cost : matrice de cout du ring
     :param affectation_cost: matrice de cout des affectations
     :return: COST : le coup de la solution
     """
     cost = 0
-    with open(file_solution_name) as f:
-        h = f.readline().split()  # on s en balek de la premiere ligne
-        h = f.readline().split()  # on recupere la liste de sommet qui est dans le ring
-        h.append('1')
-        ring_size = len(h)
-        for i in range(len(h)):
-            if i == len(h) - 1:
-                cost += int(ring_cost[int(h[i]) - 1][int(h[0])])
-            else:
-                cost += int(ring_cost[int(h[i]) - 1][int(h[i + 1]) - 1])
 
-        h = f.readline().split()  # on s'en balek de la troisième ligne
-        for i in range(len(ring_cost) - ring_size):
-            h = f.readline().split()
-            cost += int(affectation_cost[int(h[0]) - 1][int(h[1]) - 1])
+    for i in range(len(liste_ring)):
+        if i != len(liste_ring) - 1: # evite le indice out of range quand on retombe sur le 1
+            cost += int(ring_cost[liste_ring[i] - 1][liste_ring[i+1]]-1)
+
+
+    for elem in liste_affectation:
+        cost += int(affectation_cost[elem[0]-1][elem[1]-1])
+
     return cost

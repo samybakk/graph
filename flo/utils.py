@@ -44,11 +44,12 @@ def evaluation(liste_ring,liste_affectation , ring_cost, affectation_cost):
 
 
     for elem in liste_affectation:
-        cost += int(affectation_cost[elem[0]-1][elem[1]-1])
+        cost += affectation_cost[elem[0]-1][elem[1]-1]
 
     return cost
 
-def rest(ring_solution,problem_size,restant):
+def rest(ring_solution, problem_size, restant):
+    restant = []
     for i in range(problem_size):
         if i+1 not in ring_solution:
             restant.append(i+1)

@@ -28,7 +28,6 @@ def lecture(file_name):
 
     return ring_cost, affectation_cost
 
-
 def evaluation(liste_ring,liste_affectation , ring_cost, affectation_cost):
     """
 
@@ -48,11 +47,6 @@ def evaluation(liste_ring,liste_affectation , ring_cost, affectation_cost):
         cost += int(affectation_cost[elem[0]-1][elem[1]-1])
 
     return cost
-
-
-
-
-
 
 def rest(ring_solution,problem_size,restant):
     for i in range(problem_size):

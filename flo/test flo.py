@@ -27,9 +27,11 @@ objectif0 = evaluation(current_ring_solution, current_affectation_solution, ring
 best_ring_solution = current_ring_solution
 best_affectation_solution = current_affectation_solution
 
+#on prend un sommet random
 sommet = randint(2, problem_size)
 
 if sommet not in tabu_list:
+    """si le sommet est dans le ring"""
     if sommet in current_ring_solution:
 
         # on le retire du ring
@@ -38,18 +40,29 @@ if sommet not in tabu_list:
         # on l'affecte au meilleur endroit dispo
         current_affectation_solution.append(min(affectation_cost[sommet - 1]))
         """il faut un delestage ici """
-        objectif1 = evaluation(current_ring_solution, current_affectation_solution, ring_cost, affectation_cost)
 
-        # si le nouvel objectif est moins bien, alors le sommet est tabu
-        if objectif1 > objectif0:
-            tabu_list.append(sommet)
 
-        #si il est meilleur il devient la nouvelle référence :
-        if objectif1 < objectif0:
-            best_ring_solution = current_ring_solution
-            best_affectation_solution = current_affectation_solution
-            objectif0 = objectif1
+    """si le sommet n'est PAS dans le ring"""
+    if sommet not in current_ring_solution:
+        ring_sommet = current_ring_solution
+        ring_sommet[-1] = sommet
+        current_ring_solution = full_ring(temp_ring_cost, ring_sommet)
+        for i in range(1,problem_size) :
+            if i not in current_ring_solution :
+                current_affectation_solution.append(min(affectation_cost[sommet - 1]))
 
+    #on test la qualité de la nouvelle solution
+    objectif1 = evaluation(current_ring_solution, current_affectation_solution, ring_cost, affectation_cost)
+
+    # si le nouvel objectif est moins bien, alors le sommet est tabu
+    if objectif1 > objectif0:
+        tabu_list.append(sommet)
+
+    # si il est meilleur il devient la nouvelle référence :
+    if objectif1 < objectif0:
+        best_ring_solution = current_ring_solution
+        best_affectation_solution = current_affectation_solution
+        objectif0 = objectif1
 
 
 # on del les vieux sommet de la liste tabou

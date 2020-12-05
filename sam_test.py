@@ -1,6 +1,6 @@
-from full_ring import full_ring
+from flo.full_ring import full_ring
 from evaluate import evaluate
-from utils import lecture,evaluation
+from utils import lecture
 import numpy as np
 import copy as cp
 

@@ -1,8 +1,5 @@
 from utils import lecture
-import numpy as np
-from geneticalgorithm import geneticalgorithm as ga
-from full_ring import full_ring
-from sam_test import evaluate
+from flo.full_ring import full_ring
 
 liste1, liste2 = lecture("data1.dat")
 

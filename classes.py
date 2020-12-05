@@ -1,4 +1,4 @@
-from full_ring import full_ring
+from flo.full_ring import full_ring
 from utils import lecture
 import copy as cp
 from random import randint, sample, random

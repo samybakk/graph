@@ -1,7 +1,7 @@
 
 # verifier que le ring_cost sera une matrice symétrique aussi pour le challenge
-def full_ring(ring_cost):
-    temp_ring_cost = ring_cost
+def full_ring(temp_ring_cost):
+    #temp_ring_cost = ring_cost
     sol = [1]
     for i in range(len(temp_ring_cost)):
         # on trouve la meilleur possibilité locale et on met a jour la solution

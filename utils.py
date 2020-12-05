@@ -64,13 +64,19 @@ def rest(ring_solution,problem_size,restant):
 def delestage (ring_solution, affectation_solution , ring_cost, affectation_cost):
     temp = []
     #pour chaque sommet de du ring sauf le premier et le dernier(depot)
-    for i in range(1, len(ring_solution)-1):
-        # si rejoindre le dommet avant et celui apres coute moins chers
-        if ring_cost[ring_solution[i]-1][ring_solution[i-1]-1] + ring_cost[ring_solution[i]-1][ring_solution[i+1]-1]< ring_cost[ring_solution[i-1]-1][ring_solution[i+1]-1] + min(affectation_cost[ring_solution[i]-1]):
-            temp.append(i)
-            affectation_solution.append([ring_solution[i], min(affectation_cost[ring_solution[i]-1])])
+    for j in range(1, len(ring_solution) - 1):
+        t = True
 
-    for elem in temp:
-        del ring_solution[elem]
+        for i in range(1, len(ring_solution)-1):
+            if t == True :
+                # si rejoindre le sommet avant et celui apres coute moins chers
+                if ring_cost[ring_solution[i]-1][ring_solution[i-1]-1] + ring_cost[ring_solution[i]-1][ring_solution[i+1]-1]< ring_cost[ring_solution[i-1]-1][ring_solution[i+1]-1] + min(affectation_cost[ring_solution[i]-1]):
+                    t = False
+                    affectation_solution.append([ring_solution[i], min(affectation_cost[ring_solution[i]-1])])
+                    del ring_solution[i]
+            else :
+                break
+
+
 
     return ring_solution, affectation_solution

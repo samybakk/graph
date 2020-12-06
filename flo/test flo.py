@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 start_time = time.time()
 
-ring_cost, affectation_cost = lecture("data6.dat")
+ring_cost, affectation_cost = lecture("data2.dat")
 
 problem_size = len(ring_cost)
 
@@ -50,7 +50,7 @@ best_affectation_solution = current_affectation_solution
 nbr = 0
 
 """------------- algorithme -------------"""
-for k in range(5000):
+for k in range(1000):
     #on prend un sommet random
     sommet = randint(2, problem_size)
     print(sommet)
@@ -134,16 +134,17 @@ for k in range(5000):
         del tabu_list[0]
 
     # si on a deja traité tout les sommet une fois sans amélioration :
-    if len(passed) >= problem_size :
-        ring_sommet = []
-        for i in range(problem_size):
-            ring_sommet.append(i + 1)
-        current_ring_solution = full_ring(ring_cost, ring_sommet, True)
+    if nbr >= problem_size :
+        if len(passed) >= problem_size :
+            ring_sommet = []
+            for i in range(problem_size):
+                ring_sommet.append(i + 1)
+            current_ring_solution = full_ring(ring_cost, ring_sommet, True)
 
 
 
     star.append(objectif0)
-    print(str(objectif0) +' '+str(nbr))
+    print(str(objectif0) + ' ' +str(nbr))
     print(' ')
     #print(best_ring_solution)
     #print(best_affectation_solution)

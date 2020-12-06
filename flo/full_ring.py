@@ -15,8 +15,8 @@ def full_ring(ring_cost,ring_sommet, meta ):
 
     #on back ce qui rentre pas dans le ring
     for elem in autre:
-        for temp in temp_ring_cost[elem-1]:
-            temp = 1000000
+        for temp in range(len(temp_ring_cost[elem-1])):
+            temp_ring_cost[elem-1][temp] = 1000000
         for temp in temp_ring_cost:
             temp[elem-1] = 1000000
 
@@ -28,17 +28,19 @@ def full_ring(ring_cost,ring_sommet, meta ):
         sol.append(h+1)
 
         # on corrige la matrice ring_coast pour empecher de cycler
-        for elem in temp_ring_cost[sol[-2]-1]:
-            elem = 1000000
+        for elem in range(len(temp_ring_cost[sol[-2]-1])):
+            temp_ring_cost[sol[-2]-1][elem]= 1000000
         for elem in temp_ring_cost:
             elem[sol[-2]-1] = 1000000
 
+    best_sol = cp.deepcopy(sol)
+
+
     if meta == True :
         size_tabu = len(ring_sommet) * (1/2)
-        best_cost = evaluation(sol, [], ring_cost, [])
-        best_sol = cp.deepcopy(sol)
+        best_cost = evaluation(best_sol, [], ring_cost, [])
         tabu = []
-        for i in range (2*len(ring_sommet)) :
+        for i in range (len(ring_sommet)**2) :
             ref = randint(1, len(ring_sommet)-1)
             if id not in tabu :
                 temp = sol[ref]
@@ -55,7 +57,7 @@ def full_ring(ring_cost,ring_sommet, meta ):
             if len(tabu) > size_tabu:
                 del tabu[0]
 
-    return sol
+    return best_sol
 
 
 

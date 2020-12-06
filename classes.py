@@ -99,16 +99,16 @@ def evolve(old_gen, rate, tourn_nbr, elit):
 def crossover(ring_star1,ring_star2):
     nbr_edges = int(0.5*(len(ring_star1.in_ring)+len(ring_star2.in_ring)))
     new_ring_star = Ring_star([None for _ in range(nbr_edges)],[])
-    cut_pos = randint(0,min(len(ring_star1.in_ring)+len(ring_star2.in_ring)))
+    cut_pos = randint(0,min(len(ring_star1.in_ring),len(ring_star2.in_ring)))
     for i in range(cut_pos) :
-        new_ring_star.in_ring[i] = ring_star1[i]
+        new_ring_star.in_ring[i] = ring_star1.in_ring[i]
     
     for i in range(cut_pos,nbr_edges-1) :
         for j in ring_star2.in_ring :
             if j not in new_ring_star.in_ring :
-                new_ring_star.in_ring[i] = ring_star2[j]
+                new_ring_star.in_ring[i] = ring_star2.in_ring[j]
         
-    new_ring_star.in_ring = [i for i in new_ring_star if i]
+    new_ring_star.in_ring = [i for i in new_ring_star.in_ring if i]
     
     new_ring_star.out_ring = [i for i in range(2,len(ring_star1.in_ring)+len(ring_star1.out_ring)) if i not in new_ring_star.in_ring]
     

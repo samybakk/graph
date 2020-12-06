@@ -1,5 +1,5 @@
-from flo.full_ring import full_ring
-from flo.affectation import affectation
+from full_ring import full_ring
+from affectation import affectation
 from utils import lecture, evaluation, rest
 from random import randint
 import copy as cp

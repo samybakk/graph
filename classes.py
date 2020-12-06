@@ -53,8 +53,8 @@ class Population :
         self.ring_stars.remove(ring_star)
 
     def get_best(self):
-        best = self.individuals[0]
-        for ring_star in self.individuals:
+        best = self.ring_stars[0]
+        for ring_star in self.ring_stars:
             if ring_star.score > best.score:
                 best = ring_star
     
@@ -90,7 +90,7 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         new_gen.add(child)
 
     for i in range(old_elit, old_pop):
-        mutate(new_gen.individuals[i], rate)
+        mutate(new_gen.ring_stars[i], rate)
 
     return new_gen
 

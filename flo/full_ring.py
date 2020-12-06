@@ -40,7 +40,7 @@ def full_ring(ring_cost,ring_sommet, meta ):
         size_tabu = len(ring_sommet) * (1/2)
         best_cost = evaluation(best_sol, [], ring_cost, [])
         tabu = []
-        for i in range (2*len(ring_sommet)) :
+        for i in range (len(ring_sommet)**2) :
             ref = randint(1, len(ring_sommet)-1)
             if id not in tabu :
                 temp = sol[ref]

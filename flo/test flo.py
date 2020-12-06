@@ -24,6 +24,10 @@ restant = []
 passed = []
 
 star = []
+
+ring_sol_list = []
+affect_sol_list = []
+cost_list = []
 print('problem_size : '+ str(problem_size))
 #print(' ')
 
@@ -51,7 +55,7 @@ nbr = 0
 
 
 """------------- algorithme -------------"""
-for k in range(1000):
+for k in range(5000):
     #on prend un sommet random
     sommet = randint(2, problem_size)
     print(sommet)
@@ -104,6 +108,7 @@ for k in range(1000):
             nbr += 1
             passed.append(sommet)
             tabu_list.append(sommet)
+            # comme la solution est moins bonne, la solution courante est remplacée la best solutio,n
             current_ring_solution = cp.deepcopy(best_ring_solution)
             current_affectation_solution = cp.deepcopy(best_affectation_solution)
         # si il est meilleur il devient la nouvelle référence :
@@ -143,8 +148,18 @@ for k in range(1000):
                 ring_sommet.append(i + 1)
 
             print('REBASE')
-            current_ring_solution = full_ring(ring_cost, ring_sommet, True)
+            #on stock la solution atteinte
+            ring_sol_list.append(best_ring_solution)
+            affect_sol_list.append((best_affectation_solution))
+            cost_list.append(objectif0)
 
+            #on reinitialise le problème
+            best_ring_solution = full_ring(ring_cost, ring_sommet, True)
+            best_affectation_solution = []
+            objectif0 = evaluation(best_ring_solution,best_affectation_solution,ring_cost,affectation_cost)
+            tabu_list = []
+            current_ring_solution = best_ring_solution
+            current_affectation_solution = best_affectation_solution
 
 
     star.append(objectif0)
@@ -153,6 +168,11 @@ for k in range(1000):
     #print(best_ring_solution)
     #print(best_affectation_solution)
     #print(' ')
+
+
+ring_sol_list.append(best_ring_solution)
+affect_sol_list.append(best_affectation_solution)
+cost_list.append(objectif0)
 """
 note pour apres, voir si recalculer un full ring avec 
 les sommets de chaque solution ne serait pas mieux que juste adapter le ring actuelle
@@ -160,7 +180,7 @@ les sommets de chaque solution ne serait pas mieux que juste adapter le ring act
 
 print("--- %s seconds ---" % (time.time() - start_time))
 plt.plot(star)
-
+"""
 plt.show()
 print(problem_size)
 print('best_ring : ' + str(len(best_ring_solution)))
@@ -168,3 +188,18 @@ print('best_affectation : ' + str(len(best_affectation_solution)))
 print('cost : ' + str(objectif0))
 print(best_ring_solution)
 print(best_affectation_solution)
+"""
+print('nombre de soluton optimale : ' + str(len(cost_list)))
+print(ring_sol_list)
+print(affect_sol_list)
+print(cost_list)
+
+h = cost_list.index(min(cost_list))
+
+print('best solution : ')
+print('best_ring : ' + str(ring_sol_list[h]))
+print('best_affectation : ' + str(affect_sol_list[h]))
+print('cost : ' + str(cost_list[h]))
+plt.show()
+
+#probleme plus de solution stockée que sur le graphe

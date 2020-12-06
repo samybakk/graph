@@ -1,6 +1,6 @@
-from full_ring import full_ring
-from affectation import affectation
-from utils import lecture, evaluation, rest
+from flo.full_ring import full_ring
+from flo.affectation import affectation
+from flo.utils import lecture, evaluation, rest
 from random import randint
 import copy as cp
 import time
@@ -24,6 +24,10 @@ restant = []
 passed = []
 
 star = []
+
+ring_sol_list = []
+affect_sol_list = []
+cost_list = []
 print('problem_size : '+ str(problem_size))
 #print(' ')
 
@@ -49,12 +53,13 @@ best_affectation_solution = current_affectation_solution
 
 nbr = 0
 
-
+jkl = 0
 """------------- algorithme -------------"""
-for k in range(1000):
+for k in range(5000):
+    jkl +=1
     #on prend un sommet random
     sommet = randint(2, problem_size)
-    print(sommet)
+    #print(sommet)
 
     #on remet a zero les liste de travail
     ring_sommet = []
@@ -63,10 +68,10 @@ for k in range(1000):
 
     """------------ création de la nouvelle solution -------------"""
     if sommet not in tabu_list:
-        print('not tabu')
+        #print('not tabu')
         # si le sommet est dans le ring
         if sommet in current_ring_solution:
-            print('in current ring')
+            #print('in current ring')
 
             # on le retire du ring
             del current_ring_solution[current_ring_solution.index(sommet)]
@@ -85,7 +90,7 @@ for k in range(1000):
 
         # si le sommet n'est PAS dans le ring
         elif sommet not in current_ring_solution :
-            print('not in ring')
+            #print('not in ring')
             ring_sommet = cp.deepcopy(current_ring_solution)
             ring_sommet[-1] = sommet
             current_ring_solution = full_ring(ring_cost, ring_sommet, True)
@@ -100,15 +105,16 @@ for k in range(1000):
         # print ('new objectif : ' + str(objectif1))
         # si le nouvel objectif est moins bien, alors le sommet est tabu
         if objectif1 > objectif0:
-            print('pas mieux')
+            #print('pas mieux')
             nbr += 1
             passed.append(sommet)
             tabu_list.append(sommet)
+            # comme la solution est moins bonne, la solution courante est remplacée la best solutio,n
             current_ring_solution = cp.deepcopy(best_ring_solution)
             current_affectation_solution = cp.deepcopy(best_affectation_solution)
         # si il est meilleur il devient la nouvelle référence :
         if objectif1 <= objectif0:
-            print('mieux')
+            #print('mieux')
             if objectif1 != objectif0:
                 nbr = 0
                 passed = []
@@ -119,8 +125,7 @@ for k in range(1000):
             best_affectation_solution = current_affectation_solution
             objectif0 = objectif1
 
-    else :
-        print('tabu')
+
 
 
 
@@ -142,17 +147,33 @@ for k in range(1000):
             for i in range(problem_size):
                 ring_sommet.append(i + 1)
 
-            print('REBASE')
-            current_ring_solution = full_ring(ring_cost, ring_sommet, True)
+            print('REBASE '+ str(jkl) )
+            jkl=0
+            #on stock la solution atteinte
+            ring_sol_list.append(best_ring_solution)
+            affect_sol_list.append((best_affectation_solution))
+            cost_list.append(objectif0)
 
+            #on reinitialise le problème
+            best_ring_solution = full_ring(ring_cost, ring_sommet, True)
+            best_affectation_solution = []
+            objectif0 = evaluation(best_ring_solution,best_affectation_solution,ring_cost,affectation_cost)
+            tabu_list = []
+            current_ring_solution = best_ring_solution
+            current_affectation_solution = best_affectation_solution
 
 
     star.append(objectif0)
-    print(str(objectif0) + ' ' +str(nbr))
-    print(' ')
+    #print(str(objectif0) + ' ' +str(nbr))
+    #print(' ')
     #print(best_ring_solution)
     #print(best_affectation_solution)
     #print(' ')
+
+
+ring_sol_list.append(best_ring_solution)
+affect_sol_list.append(best_affectation_solution)
+cost_list.append(objectif0)
 """
 note pour apres, voir si recalculer un full ring avec 
 les sommets de chaque solution ne serait pas mieux que juste adapter le ring actuelle
@@ -160,7 +181,7 @@ les sommets de chaque solution ne serait pas mieux que juste adapter le ring act
 
 print("--- %s seconds ---" % (time.time() - start_time))
 plt.plot(star)
-
+"""
 plt.show()
 print(problem_size)
 print('best_ring : ' + str(len(best_ring_solution)))
@@ -168,3 +189,18 @@ print('best_affectation : ' + str(len(best_affectation_solution)))
 print('cost : ' + str(objectif0))
 print(best_ring_solution)
 print(best_affectation_solution)
+"""
+print('nombre de soluton optimale : ' + str(len(cost_list)))
+print(ring_sol_list)
+print(affect_sol_list)
+print(cost_list)
+
+h = cost_list.index(min(cost_list))
+
+print('best solution : ')
+print('best_ring : ' + str(ring_sol_list[h]))
+print('best_affectation : ' + str(affect_sol_list[h]))
+print('cost : ' + str(cost_list[h]))
+plt.show()
+
+#probleme plus de solution stockée que sur le graphe

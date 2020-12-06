@@ -1,5 +1,5 @@
-from flo.full_ring import full_ring
-from flo.affectation import affectation
+from full_ring import full_ring
+from affectation import affectation
 from utils import lecture, evaluation, rest
 from random import randint
 import copy as cp
@@ -49,8 +49,9 @@ best_affectation_solution = current_affectation_solution
 
 nbr = 0
 
+
 """------------- algorithme -------------"""
-for k in range(5000):
+for k in range(1000):
     #on prend un sommet random
     sommet = randint(2, problem_size)
     print(sommet)
@@ -78,7 +79,7 @@ for k in range(5000):
             d autres sommet y etaint affectés"""
             restant = rest(current_ring_solution, problem_size, restant)
             #print('restant : ' + str(restant))
-            current_affectation_solution = affectation(affectation_cost, restant, current_affectation_solution)
+            current_affectation_solution = affectation(affectation_cost, restant)
             #print(current_affectation_solution)
 
 
@@ -87,9 +88,9 @@ for k in range(5000):
             print('not in ring')
             ring_sommet = cp.deepcopy(current_ring_solution)
             ring_sommet[-1] = sommet
-            current_ring_solution = full_ring(ring_cost, ring_sommet, False)
+            current_ring_solution = full_ring(ring_cost, ring_sommet, True)
             restant = rest(current_ring_solution, problem_size, restant)
-            current_affectation_solution = affectation(affectation_cost, restant, current_affectation_solution)
+            current_affectation_solution = affectation(affectation_cost, restant)
             #print(current_affectation_solution)
 
         """------------- comparaison des solutions -------------"""
@@ -134,16 +135,20 @@ for k in range(5000):
         del tabu_list[0]
 
     # si on a deja traité tout les sommet une fois sans amélioration :
-    if len(passed) >= problem_size :
-        ring_sommet = []
-        for i in range(problem_size):
-            ring_sommet.append(i + 1)
-        current_ring_solution = full_ring(ring_cost, ring_sommet, True)
+    if nbr >= problem_size :
+
+        if len(passed) >= problem_size :
+            ring_sommet = []
+            for i in range(problem_size):
+                ring_sommet.append(i + 1)
+
+            print('REBASE')
+            current_ring_solution = full_ring(ring_cost, ring_sommet, True)
 
 
 
     star.append(objectif0)
-    print(str(objectif0) +' '+str(nbr))
+    print(str(objectif0) + ' ' +str(nbr))
     print(' ')
     #print(best_ring_solution)
     #print(best_affectation_solution)
@@ -162,3 +167,4 @@ print('best_ring : ' + str(len(best_ring_solution)))
 print('best_affectation : ' + str(len(best_affectation_solution)))
 print('cost : ' + str(objectif0))
 print(best_ring_solution)
+print(best_affectation_solution)

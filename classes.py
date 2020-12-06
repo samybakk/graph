@@ -19,8 +19,12 @@ class Ring_star:
 
                 self.score += ring_cost[int(edge - 1)][int(self.in_ring[int(index + 1)] - 1)]
 
-        for index, edge in enumerate(self.out_ring):
-            self.score += min(assign_cost[edge - 1])
+        for edge in self.out_ring:
+            assign_list = []
+            for index, assign in enumerate(assign_cost[edge-1]):
+                if index in self.in_ring:
+                    assign_list.append(assign)
+                self.score += min(assign_list)
         return self.score
 
     def swap(self, edge1, edge2):

@@ -45,16 +45,16 @@ class Ring_star:
 class Population :
     def __init__(self,ring_stars):
         self.ring_stars = ring_stars
-        
+
     def add(self,ring_star):
         self.ring_stars.append(ring_star)
-    
+
     def remove_ring(self,ring_star):
         self.ring_stars.remove(ring_star)
 
     def get_best(self):
-        best = self.individuals[0]
-        for ring_star in self.individuals:
+        best = self.ring_stars[0]
+        for ring_star in self.ring_stars:
             if ring_star.score > best.score:
                 best = ring_star
     
@@ -71,7 +71,9 @@ def mutate(ring, rate):
                 ring.switch(selected)
 
 def select(population, nbr):
-    return Population(sample(population, nbr).get_best())
+    print(nbr)
+    print(len(population.ring_stars))
+    return Population(sample(population.ring_stars, nbr)).get_best()
 
 def evolve(old_gen, rate, tourn_nbr, elit):
     new_gen = Population([])
@@ -84,8 +86,8 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         old_gen.remove_ring(best)
 
     for _ in range(old_elit, old_pop):
-        parent_1 = select(new_gen, tourn_nbr)
-        parent_2 = select(new_gen, tourn_nbr)
+        parent_1 = select(old_gen, tourn_nbr)
+        parent_2 = select(old_gen, tourn_nbr)
         child = crossover(parent_1, parent_2)
         new_gen.add(child)
 
@@ -97,7 +99,7 @@ def evolve(old_gen, rate, tourn_nbr, elit):
 def crossover(ring_star1,ring_star2):
     nbr_edges = int(0.5*(len(ring_star1.in_ring)+len(ring_star2.in_ring)))
     new_ring_star = Ring_star([None for _ in range(nbr_edges)],[])
-    cut_pos = random.randint(0,min(len(ring_star1.in_ring)+len(ring_star2.in_ring)))
+    cut_pos = randint(0,min(len(ring_star1.in_ring)+len(ring_star2.in_ring)))
     for i in range(cut_pos) :
         new_ring_star.in_ring[i] = ring_star1[i]
     
@@ -131,7 +133,7 @@ if __name__ == '__main__':
     counter,min_score,gen = 0,1_000_000,0
     
     while counter < 10 :
-        Pop = evolve(Pop, tourn_size, mut_rate,elit)
+        Pop = evolve(Pop, mut_rate, tourn_size, elit)
         score = Pop.get_best().score
     
         if score < min_score:

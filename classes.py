@@ -2,6 +2,7 @@ from flo.full_ring import full_ring
 from utils import lecture
 import copy as cp
 from random import randint, sample, random
+import time
 
 
 class Ring_star:
@@ -109,8 +110,33 @@ def crossover(ring_star1,ring_star2):
     return new_ring_star
 
 if __name__ == '__main__':
+    pop_size = 100
+    tourn_size = int(pop_size/4)
+    mut_rate = 0.15
+    elit = int(pop_size/4)
+    
     liste1, liste2 = lecture("data1.dat")
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
-    ring = full_ring(list_ring)
-    test = Ring_star(ring,[])
-    print(test.cost(liste1, liste2))
+    ring = full_ring(list_ring,[x for x in range(1,len(liste1))],meta=False)
+    ring_stars = []
+    for x in range(pop_size):
+        ring_stars.append(Ring_star(ring, []))
+    
+    Pop = Population(ring_stars)
+    star = time.time()
+    counter,min_score,gen = 0,1_000_000,0
+    
+    while counter < 10 :
+        Pop = evolve(Pop, tourn_size, mut_rate,elit)
+        score = Pop.get_best().score
+    
+        if score < min_score:
+            counter, min_score = 0, score
+        else:
+            counter += 1
+    
+        gen += 1
+     
+     
+    duree = round(time.time()-star,4)
+    print('temps écoulé : ',duree,'\nbest sol : ',Pop.get_best())

@@ -92,7 +92,7 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         new_gen.add(child)
 
     for i in range(old_elit, old_pop):
-        mutate(new_gen.individuals[i], rate)
+        mutate(new_gen.ring_stars[i], rate)
 
     return new_gen
 

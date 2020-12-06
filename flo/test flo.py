@@ -53,9 +53,10 @@ best_affectation_solution = current_affectation_solution
 
 nbr = 0
 
-
+jkl = 0
 """------------- algorithme -------------"""
 for k in range(5000):
+    jkl +=1
     #on prend un sommet random
     sommet = randint(2, problem_size)
     #print(sommet)
@@ -146,7 +147,8 @@ for k in range(5000):
             for i in range(problem_size):
                 ring_sommet.append(i + 1)
 
-            print('REBASE')
+            print('REBASE '+ str(jkl) )
+            jkl=0
             #on stock la solution atteinte
             ring_sol_list.append(best_ring_solution)
             affect_sol_list.append((best_affectation_solution))

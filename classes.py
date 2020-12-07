@@ -118,19 +118,17 @@ def crossover(ring_star1,ring_star2):
     return new_ring_star
 
 if __name__ == '__main__':
-    pop_size = 100
+    pop_size = 500
     tourn_size = int(pop_size/4)
-    mut_rate = 0.05
+    mut_rate = 0.25
     elit = 4
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
-    ring = full_ring(list_ring,[x for x in range(1,len(liste1)+1)],meta=False)
-    no_ring = Ring_star([1,1], cp.deepcopy(ring[1:-1]))
-    all_ring = Ring_star(cp.deepcopy(ring), [])
-    ring_stars = [no_ring, all_ring]
-    for x in range(2,pop_size):
-        child = crossover(no_ring, all_ring)
-        ring_stars.append(child)
+    ring = full_ring(list_ring,[x for x in range(1,len(liste1))],meta=False, Tcoef=0.9)
+    ring_stars = []
+    for x in range(pop_size):
+        ring_stars.append(Ring_star(cp.deepcopy(ring), []))
+
     Pop = Population(ring_stars)
     star = time.time()
     

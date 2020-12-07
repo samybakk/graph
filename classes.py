@@ -4,13 +4,13 @@ import copy as cp
 from random import randint, sample, random
 import time
 
-
+liste1, liste2 = lecture("data1.dat")
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):
         self.in_ring = in_ring
         self.out_ring = out_ring
-        self.score = 0
+        self.score = self.cost(liste1,liste2)
 
     def cost(self, ring_cost, assign_cost): #Ne pas oublier de rajouter le 1 à la fin
         self.score = 0
@@ -39,6 +39,9 @@ class Ring_star:
             self.in_ring.remove(edge)
             self.out_ring.append(edge)
         if edge not in self.in_ring:
+            if edge not in self.out_ring:
+                print(self.in_ring,'\n',self.out_ring)
+                print(edge)
             self.in_ring.insert(randint(0, len(self.in_ring)), edge)
             self.out_ring.remove(edge)
     
@@ -71,8 +74,6 @@ def mutate(ring, rate):
                 ring.switch(selected)
 
 def select(population, nbr):
-    print(nbr)
-    print(len(population.ring_stars))
     return Population(sample(population.ring_stars, nbr)).get_best()
 
 def evolve(old_gen, rate, tourn_nbr, elit):
@@ -85,12 +86,12 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         new_gen.add(best)
         old_gen.remove_ring(best)
 
-    for _ in range(old_elit, old_pop):
-        parent_1 = select(old_gen, tourn_nbr)
-        parent_2 = select(old_gen, tourn_nbr)
-        child = crossover(parent_1, parent_2)
-        new_gen.add(child)
-
+    #for _ in range(old_elit, old_pop):
+        #parent_1 = select(old_gen, tourn_nbr)
+        #parent_2 = select(old_gen, tourn_nbr)
+        #child = crossover(parent_1, parent_2)
+        #new_gen.add(child)
+    
     for i in range(old_elit, old_pop):
         mutate(new_gen.ring_stars[i], rate)
 
@@ -119,7 +120,7 @@ if __name__ == '__main__':
     pop_size = 100
     tourn_size = int(pop_size/4)
     mut_rate = 0.15
-    elit = int(pop_size/4)
+    elit = 1
     
     liste1, liste2 = lecture("data1.dat")
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
@@ -145,4 +146,4 @@ if __name__ == '__main__':
      
      
     duree = round(time.time()-star,4)
-    print('temps écoulé : ',duree,'\nbest sol : ',Pop.get_best())
+    print('temps écoulé : ',duree,'\nbest sol : ',Pop.get_best().score,Pop.get_best().in_ring,Pop.get_best().out_ring)

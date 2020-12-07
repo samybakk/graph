@@ -1,13 +1,13 @@
 from flo.full_ring import full_ring
 from flo.affectation import affectation
 from flo.utils import lecture, evaluation, rest
-from random import randint
+from random import randint, uniform
 import copy as cp
 import time
 import matplotlib.pyplot as plt
 start_time = time.time()
 
-ring_cost, affectation_cost = lecture("data8.dat")
+ring_cost, affectation_cost = lecture("data2.dat")
 
 problem_size = len(ring_cost)
 
@@ -36,14 +36,15 @@ print('problem_size : '+ str(problem_size))
 """------------- parametre de la methode -------------"""
 max_size_tabu = problem_size * (0.5)
 Meta = True
+minute = 0.5
 
 
 
 """------------- solution initiale -------------"""
-
+Tcoef=0.9
 for i in range(problem_size):
     ring_sommet.append(i+1)
-current_ring_solution = full_ring(ring_cost, ring_sommet, True)
+current_ring_solution = full_ring(ring_cost, ring_sommet, True, Tcoef)
 
 """il faut faire un delestage ici"""
 objectif0 = evaluation(current_ring_solution, current_affectation_solution, ring_cost, affectation_cost)
@@ -56,7 +57,7 @@ nbr = 0
 
 jkl = 0
 """------------- algorithme -------------"""
-for k in range(5000):
+while time.time() < start_time +(60 * minute) :
     jkl +=1
     #on prend un sommet random
     sommet = randint(2, problem_size)
@@ -94,7 +95,7 @@ for k in range(5000):
             #print('not in ring')
             ring_sommet = cp.deepcopy(current_ring_solution)
             ring_sommet[-1] = sommet
-            current_ring_solution = full_ring(ring_cost, ring_sommet, Meta)
+            current_ring_solution = full_ring(ring_cost, ring_sommet, Meta,Tcoef)
             restant = rest(current_ring_solution, problem_size, restant)
             current_affectation_solution = affectation(affectation_cost, restant)
             #print(current_affectation_solution)
@@ -157,10 +158,13 @@ for k in range(5000):
             cost_list.append(objectif0)
 
             #on reinitialise le problème
-            best_ring_solution = full_ring(ring_cost, ring_sommet, Meta)
+            best_ring_solution = full_ring(ring_cost, ring_sommet, Meta,Tcoef)
             best_affectation_solution = []
             objectif0 = evaluation(best_ring_solution,best_affectation_solution,ring_cost,affectation_cost)
             tabu_list = []
+            Tcoef = round(uniform(0.5,0.95),1)
+            print(Tcoef)
+            max_size_tabu = problem_size * Tcoef
             passed = []
             nbr =0
             current_ring_solution = best_ring_solution
@@ -208,3 +212,15 @@ print('cost : ' + str(cost_list[h]))
 plt.show()
 
 #probleme plus de solution stockée que sur le graphe
+
+with open ("solution.txt","w") as w:
+    del ring_sol_list[h][-1]
+    w.write('RING ' + str(len(ring_sol_list[h]))+" \n")
+    for elem in ring_sol_list[h]:
+        w.write(str(elem)+' ')
+    w.write(" \n")
+    w.write("STAR \n")
+    for elem in affect_sol_list[h]:
+        w.write(str(affect_sol_list[h][0]) + " " + str(affect_sol_list[h][0]) + " \n")
+
+    w.write("COST " +str(cost_list[h]) + " \n")

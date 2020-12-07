@@ -2,7 +2,7 @@ import copy as cp
 from random import randint
 from utils import evaluation
 # verifier que le ring_cost sera une matrice symétrique aussi pour le challenge
-def full_ring(ring_cost,ring_sommet, meta ):
+def full_ring(ring_cost,ring_sommet, meta ,Tcoef):
     temp_ring_cost = cp.deepcopy(ring_cost)
 
     sol = [1]
@@ -37,10 +37,10 @@ def full_ring(ring_cost,ring_sommet, meta ):
 
 
     if meta == True :
-        size_tabu = len(ring_sommet) * (0.5) +1
+        size_tabu = len(ring_sommet) * (Tcoef) +1
         best_cost = evaluation(best_sol, [], ring_cost, [])
         tabu = [1]
-        for i in range(len(ring_sommet)**2):
+        for i in range(len(ring_sommet)**1):
             ref = randint(1, len(ring_sommet)-1)
             if ref not in tabu:
                 if ref == 1:

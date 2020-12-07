@@ -24,7 +24,7 @@ class Ring_star:
             for index, assign in enumerate(assign_cost[edge-1]):
                 if index in self.in_ring:
                     assign_list.append(assign)
-                self.score += min(assign_list)
+            self.score += min(assign_list)
         return self.score
 
     def swap(self, edge1, edge2):
@@ -34,17 +34,16 @@ class Ring_star:
         self.in_ring[index1] = self.in_ring[index2]
         self.in_ring[index2] = tmp
 
-    def switch(self, edges):
-        for edge in edges :
-            if edge in self.in_ring:
-                self.in_ring.remove(edge)
-                self.out_ring.append(edge)
-            if edge not in self.in_ring:
-                if edge not in self.out_ring:
-                    print(self.in_ring,'\n',self.out_ring)
-                    print(edge)
-                self.in_ring.insert(randint(0, len(self.in_ring)), edge)
-                self.out_ring.remove(edge)
+    def switch(self, edge):
+        if edge in self.in_ring:
+            self.in_ring.remove(edge)
+            self.out_ring.append(edge)
+        if edge not in self.in_ring:
+            if edge not in self.out_ring:
+                print(self.in_ring,'\n',self.out_ring)
+                print(edge)
+            self.in_ring.insert(randint(0, len(self.in_ring)), edge)
+            self.out_ring.remove(edge)
     
 class Population :
     def __init__(self,ring_stars):
@@ -67,15 +66,18 @@ class Population :
         return best
 
 def mutate(ring, rate):
-    for _ in range(len(ring.in_ring)):
+    for i in range(len(ring.in_ring)):
         if random() < rate:
             if random() < 0.5:
-                selected = sample(ring.in_ring[1:-1], 2)
-                ring.swap(selected[0], selected[1])
-            else:
                 selected = sample(ring.in_ring[1:-1], 1)
+                ring.swap(ring.in_ring[i], selected[0])
+            else:
+                selected = ring.in_ring[i]
                 ring.switch(selected)
-
+    for i in range(len(ring.out_ring)):
+        if random() < rate:
+            selected = ring.out_ring[i]
+            ring.switch(selected)
 def select(population, nbr):
     return Population(sample(population.ring_stars, nbr)).get_best()
 
@@ -95,7 +97,7 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         #child = crossover(parent_1, parent_2)
         #new_gen.add(child)
     
-    for i in range(len(new_gen.ring_stars)):
+    for i in range(old_pop//2, old_pop):
         
         mutate(new_gen.ring_stars[i], rate)
 

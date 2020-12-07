@@ -4,13 +4,13 @@ import copy as cp
 from random import randint, sample, random
 import time
 
-liste1, liste2 = lecture("data1.dat")
+liste1, liste2 = lecture("data3.dat")
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):
         self.in_ring = in_ring
         self.out_ring = out_ring
-        self.score = self.cost(liste1,liste2)
+        self.score = 0
 
     def cost(self, ring_cost, assign_cost): #Ne pas oublier de rajouter le 1 à la fin
         self.score = 0
@@ -88,16 +88,16 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         new_gen.add(best)
         old_gen.remove_ring(best)
 
-    #for _ in range(old_elit, old_pop):
-        #parent_1 = select(old_gen, tourn_nbr)
-        #parent_2 = select(old_gen, tourn_nbr)
-        #child = crossover(parent_1, parent_2)
-        #new_gen.add(child)
+    for _ in range(old_elit, old_pop):
+        parent_1 = select(old_gen, tourn_nbr)
+        parent_2 = select(old_gen, tourn_nbr)
+        child = crossover(parent_1, parent_2)
+        new_gen.add(child)
     
     for i in range(old_pop//2, old_pop):
-        print("Avant: ", new_gen.ring_stars[i].in_ring)
+        #print("Avant: ", new_gen.ring_stars[i].in_ring)
         mutate(new_gen.ring_stars[i], rate)
-        print("Après: ", new_gen.ring_stars[i].in_ring)
+        #print("Après: ", new_gen.ring_stars[i].in_ring)
 
     return new_gen
 
@@ -110,8 +110,8 @@ def crossover(ring_star1,ring_star2):
     
     for i in range(cut_pos,nbr_edges-1) :
         for j in ring_star2.in_ring :
-            if j not in new_ring_star.in_ring :
-                new_ring_star.in_ring[i] = ring_star2.in_ring[j]
+            if j not in new_ring_star.in_ring and None in new_ring_star.in_ring :
+                new_ring_star.in_ring[i] = j
         
     new_ring_star.in_ring = [i for i in new_ring_star.in_ring if i]
     
@@ -122,30 +122,32 @@ def crossover(ring_star1,ring_star2):
 if __name__ == '__main__':
     pop_size = 100
     tourn_size = int(pop_size/4)
-    mut_rate = 0.15
-    elit = 1
+    mut_rate = 0.25
+    elit = 2
     
-    liste1, liste2 = lecture("data1.dat")
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
     ring = full_ring(list_ring,[x for x in range(1,len(liste1))],meta=False)
     ring_stars = []
     for x in range(pop_size):
-        ring_stars.append(Ring_star(ring, []))
+        ring_stars.append(Ring_star(cp.deepcopy(ring), []))
     
     Pop = Population(ring_stars)
     star = time.time()
     counter,min_score,gen = 0,1_000_000,0
     
-    while counter < 10 :
+    while counter < 15 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
+        best =Pop.get_best()
         score = Pop.get_best().score
     
         if score < min_score:
             counter, min_score = 0, score
         else:
             counter += 1
-    
+        
+        
+        print("gen : ",gen,'\nbest : ',best.in_ring,'\ncost : ',score)
         gen += 1
      
      

@@ -4,7 +4,7 @@ import copy as cp
 from random import randint, sample, random
 import time
 
-liste1, liste2 = lecture("data3.dat")
+liste1, liste2 = lecture("data2.dat")
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):
@@ -100,18 +100,16 @@ def evolve(old_gen, rate, tourn_nbr, elit):
     return new_gen
 
 def crossover(ring_star1,ring_star2):
-    nbr_edges = int(0.5*(len(ring_star1.in_ring)+len(ring_star2.in_ring)))
-    new_ring_star = Ring_star([None for _ in range(nbr_edges)],[])
-    cut_pos = randint(1,min(len(ring_star1.in_ring),len(ring_star2.in_ring)))
-    for i in range(cut_pos) :
-        new_ring_star.in_ring[i] = ring_star1.in_ring[i]
+    cut_pos1 = randint(1, len(ring_star1.in_ring)-1)
+    cut_pos2 = randint(1, len(ring_star2.in_ring)-1)
+    new_ring_star = Ring_star([],[])
+    new_ring_star.in_ring.append(1)
+    for i in range(1, cut_pos1):
+        new_ring_star.in_ring.append(ring_star1.in_ring[i])
     
-    for i in range(cut_pos,len(ring_star2.in_ring)) :
-        for j in ring_star2.in_ring :
-            if j not in new_ring_star.in_ring :
-                new_ring_star.in_ring[i] = j
-        
-    new_ring_star.in_ring = [i for i in new_ring_star.in_ring if i]
+    for i in range(cut_pos2,len(ring_star2.in_ring)-1):
+        if ring_star2.in_ring[i] not in new_ring_star.in_ring:
+            new_ring_star.in_ring.append(ring_star2.in_ring[i])
 
     new_ring_star.in_ring.append(1)
 
@@ -120,17 +118,19 @@ def crossover(ring_star1,ring_star2):
     return new_ring_star
 
 if __name__ == '__main__':
-    pop_size = 100
+    pop_size = 500
     tourn_size = int(pop_size/4)
-    mut_rate = 0.25
-    elit = 2
+    mut_rate = 0.05
+    elit = 4
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
-    ring = full_ring(list_ring,[x for x in range(1,len(liste1))],meta=False)
-    ring_stars = []
-    for x in range(pop_size):
-        ring_stars.append(Ring_star(cp.deepcopy(ring), []))
-    
+    ring = full_ring(list_ring,[x for x in range(1,len(liste1)+1)],meta=False)
+    no_ring = Ring_star([1,1], cp.deepcopy(ring[1:-1]))
+    all_ring = Ring_star(cp.deepcopy(ring), [])
+    ring_stars = [no_ring, all_ring]
+    for x in range(2,pop_size):
+        child = crossover(no_ring, all_ring)
+        ring_stars.append(child)
     Pop = Population(ring_stars)
     star = time.time()
     counter,min_score,gen = 0,1_000_000,0
@@ -138,7 +138,7 @@ if __name__ == '__main__':
     while counter < 15 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
-        best =Pop.get_best()
+        best = Pop.get_best()
         score = Pop.get_best().score
     
         if score < min_score:

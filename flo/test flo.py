@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 start_time = time.time()
 
-ring_cost, affectation_cost = lecture("data6.dat")
+ring_cost, affectation_cost = lecture("data8.dat")
 
 problem_size = len(ring_cost)
 
@@ -33,8 +33,8 @@ print('problem_size : '+ str(problem_size))
 
 
 """------------- parametre de la methode -------------"""
-max_size_tabu = problem_size * ( 1/2 )
-
+max_size_tabu = problem_size * (0.5)
+Meta = True
 
 
 
@@ -93,7 +93,7 @@ for k in range(5000):
             #print('not in ring')
             ring_sommet = cp.deepcopy(current_ring_solution)
             ring_sommet[-1] = sommet
-            current_ring_solution = full_ring(ring_cost, ring_sommet, True)
+            current_ring_solution = full_ring(ring_cost, ring_sommet, Meta)
             restant = rest(current_ring_solution, problem_size, restant)
             current_affectation_solution = affectation(affectation_cost, restant)
             #print(current_affectation_solution)
@@ -107,6 +107,7 @@ for k in range(5000):
         if objectif1 > objectif0:
             #print('pas mieux')
             nbr += 1
+            #if sommet not in passed :
             passed.append(sommet)
             tabu_list.append(sommet)
             # comme la solution est moins bonne, la solution courante est remplacée la best solutio,n
@@ -139,7 +140,7 @@ for k in range(5000):
     if len(tabu_list) > max_size_tabu:
         del tabu_list[0]
 
-    # si on a deja traité tout les sommet une fois sans amélioration :
+    """---------------si on a deja traité tout les sommet une fois sans amélioration-------------"""
     if nbr >= problem_size :
 
         if len(passed) >= problem_size :
@@ -155,10 +156,12 @@ for k in range(5000):
             cost_list.append(objectif0)
 
             #on reinitialise le problème
-            best_ring_solution = full_ring(ring_cost, ring_sommet, True)
+            best_ring_solution = full_ring(ring_cost, ring_sommet, Meta)
             best_affectation_solution = []
             objectif0 = evaluation(best_ring_solution,best_affectation_solution,ring_cost,affectation_cost)
             tabu_list = []
+            passed = []
+            nbr =0
             current_ring_solution = best_ring_solution
             current_affectation_solution = best_affectation_solution
 

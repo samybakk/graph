@@ -37,25 +37,55 @@ def full_ring(ring_cost,ring_sommet, meta ):
 
 
     if meta == True :
-        size_tabu = len(ring_sommet) * (1/2)
+        size_tabu = len(ring_sommet) * (0.5) +1
         best_cost = evaluation(best_sol, [], ring_cost, [])
-        tabu = []
-        for i in range (len(ring_sommet)**2) :
+        tabu = [1]
+        for i in range(len(ring_sommet)**2):
             ref = randint(1, len(ring_sommet)-1)
-            if id not in tabu :
-                temp = sol[ref]
-                sol[ref] = sol[ref+1]
-                sol[ref + 1] = temp
-                cost = evaluation(sol, [], ring_cost, [])
+            if ref not in tabu:
+                if ref == 1:
+                    temp = sol[ref]
+                    sol[ref] = sol[ref+1]
+                    sol[ref + 1] = temp
+                    cost = evaluation(sol, [], ring_cost, [])
+                    print('coucou')
+                elif id == len(ring_sommet)-1:
+                    temp = sol[ref]
+                    sol[ref] = sol[ref - 1]
+                    sol[ref - 1] = temp
+                    cost = evaluation(sol, [], ring_cost, [])
+                    print('coucou gf')
+                else:
 
-            if cost <= best_cost:
-                best_cost = cost
-                best_sol = cp.deepcopy(sol)
-            if cost > best_cost:
-                tabu.append(id)
+                    temp = sol[ref]
+                    sol[ref] = sol[ref + 1]
+                    sol[ref + 1] = temp
+                    cost1 = evaluation(sol, [], ring_cost, [])
+                    G1 = sol
+
+                    temp = sol[ref+1]
+                    sol[ref+1] = sol[ref]
+                    sol[ref] = temp
+                    temp = sol[ref]
+                    sol[ref] = sol[ref - 1]
+                    sol[ref - 1] = temp
+                    cost2 = evaluation(sol, [], ring_cost, [])
+
+                    if cost2 >= cost1:
+                        cost = cost1
+                        sol = G1
+
+                    if cost1 > cost2:
+                        cost = cost2
+
+                if cost <= best_cost:
+                    best_cost = cost
+                    best_sol = cp.deepcopy(sol)
+                if cost > best_cost:
+                    tabu.append(ref)
 
             if len(tabu) > size_tabu:
-                del tabu[0]
+                del tabu[1]
 
     return best_sol
 

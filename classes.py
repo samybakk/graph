@@ -4,7 +4,7 @@ import copy as cp
 from random import randint, sample, random,uniform
 import time
 
-liste1, liste2 = lecture("data2.dat")
+liste1, liste2 = lecture("data3.dat")
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):
@@ -22,7 +22,7 @@ class Ring_star:
         for edge in self.out_ring:
             assign_list = []
             for index, assign in enumerate(assign_cost[edge-1]):
-                if index in self.in_ring:
+                if index+1 in self.in_ring:
                     assign_list.append(assign)
             self.score += min(assign_list)
         return self.score
@@ -118,9 +118,11 @@ def crossover(ring_star1,ring_star2):
     return new_ring_star
 
 if __name__ == '__main__':
-    pop_size = 500
+    test = Ring_star([1, 32, 11, 1],[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51])
+    test_cost = test.cost(liste1,liste2)
+    pop_size = 200
     tourn_size = int(pop_size/4)
-    mut_rate = 0.25
+    mut_rate = 0.05
     elit = 4
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)

@@ -58,7 +58,7 @@ class Population :
     def get_best(self):
         best = self.ring_stars[0]
         for ring_star in self.ring_stars:
-            if ring_star.score > best.score:
+            if ring_star.cost(liste1, liste2) < best.cost(liste1,liste2):
                 best = ring_star
     
         return best
@@ -67,10 +67,10 @@ def mutate(ring, rate):
     for _ in range(len(ring.in_ring)):
         if random() < rate:
             if random() < 0.5:
-                selected = sample(ring.in_ring, 2)
+                selected = sample(ring.in_ring[1:-1], 2)
                 ring.swap(selected[0], selected[1])
             else:
-                selected = sample(ring.in_ring, 1)
+                selected = sample(ring.in_ring[1:-1], 1)
                 ring.switch(selected)
 
 def select(population, nbr):
@@ -112,7 +112,10 @@ def crossover(ring_star1,ring_star2):
     new_ring_star.in_ring = [i for i in new_ring_star.in_ring if i]
     
     new_ring_star.out_ring = [i for i in range(2,len(ring_star1.in_ring)+len(ring_star1.out_ring)) if i not in new_ring_star.in_ring]
-    
+
+    print(new_ring_star.in_ring)
+    print(ring_star1)
+    print(ring_star2)
     
     return new_ring_star
 

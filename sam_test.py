@@ -7,9 +7,9 @@ import copy as cp
  
 if __name__ == '__main__':
     liste1, liste2 = lecture("data1.dat")
-    list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
+    list_ring,list_assign = cp.deepcopy(liste1), cp.deepcopy(liste2)
     ring = full_ring(list_ring)
-    print("initial ring : ",ring)
+    print("initial ring : ", ring)
     
     
     egdes_nbr = len(ring)

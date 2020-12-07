@@ -118,7 +118,7 @@ def crossover(ring_star1,ring_star2):
     return new_ring_star
 
 if __name__ == '__main__':
-    pop_size = 500
+    pop_size = 100
     tourn_size = int(pop_size/4)
     mut_rate = 0.05
     elit = 4
@@ -139,8 +139,11 @@ if __name__ == '__main__':
     while counter < 10 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
-        best = Pop.get_best()
-        score = Pop.get_best().score
+        for ring in Pop.ring_stars :
+            print(ring.cost(liste1,liste2),ring.in_ring)
+
+        best_pop = Pop.get_best()
+        score_pop = Pop.get_best().cost(liste1, liste2)
     
         if score_pop < min_score:
             best = best_pop

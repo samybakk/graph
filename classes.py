@@ -1,10 +1,10 @@
 from flo.full_ring import full_ring
 from utils import lecture
 import copy as cp
-from random import randint, sample, random
+from random import randint, sample, random,uniform
 import time
 
-liste1, liste2 = lecture("data1.dat")
+liste1, liste2 = lecture("data3.dat")
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):
@@ -94,8 +94,8 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         child = crossover(parent_1, parent_2)
         new_gen.add(child)
     
-    for i in range(old_elit, old_pop):
-        mutate(new_gen.ring_stars[i], rate)
+    for i in range(1, len(new_gen.ring_stars)):
+        mutate(new_gen.ring_stars[i],uniform(rate/10,rate))
 
     return new_gen
 
@@ -120,38 +120,42 @@ def crossover(ring_star1,ring_star2):
     return new_ring_star
 
 if __name__ == '__main__':
-    pop_size = 500
+    pop_size = 200
     tourn_size = int(pop_size/4)
-    mut_rate = 0.01
-    elit = 10
+    mut_rate = 0.3
+    elit = 40
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
-    ring = full_ring(list_ring,[x for x in range(1,len(liste1)+1)],meta=False)
+    ring = full_ring(list_ring,[x for x in range(1,len(liste1)+1)],meta=True)
     ring_stars = []
     for x in range(pop_size):
         ring_stars.append(Ring_star(cp.deepcopy(ring), []))
     
     Pop = Population(ring_stars)
     star = time.time()
-    counter,min_score,gen = 0,1_000_000,0
     
+    
+    counter, min_score, gen = 0, 100000000, 0
     while counter < 10 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
         for ring in Pop.ring_stars :
             print(ring.cost(liste1,liste2),ring.in_ring)
-        best =Pop.get_best()
-        score = Pop.get_best().score
+
+        best_pop = Pop.get_best()
+        score_pop = Pop.get_best().cost(liste1, liste2)
     
-        if score < min_score:
-            counter, min_score = 0, score
+        if score_pop < min_score:
+            best = best_pop
+            counter, min_score = 0, score_pop
+            
         else:
             counter += 1
 
 
-        print("gen : ",gen,'\nbest : ',best.in_ring,best.out_ring,'\ncost : ',score)
+        print("gen : ",gen,'\nbest : ',best.in_ring,best.out_ring,'\ncost : ',min_score)
         gen += 1
      
      
     duree = round(time.time()-star,4)
-    print('temps écoulé : ',duree,'\nbest sol : ',Pop.get_best().score,Pop.get_best().in_ring,Pop.get_best().out_ring)
+    print('temps écoulé : ',duree,'\nbest sol : ',min_score,best.in_ring,best.out_ring)

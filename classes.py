@@ -38,11 +38,8 @@ class Ring_star:
         if edge in self.in_ring:
             self.in_ring.remove(edge)
             self.out_ring.append(edge)
-        if edge not in self.in_ring:
-            if edge not in self.out_ring:
-                print(self.in_ring,'\n',self.out_ring)
-                print(edge)
-            self.in_ring.insert(randint(0, len(self.in_ring)), edge)
+        else:
+            self.in_ring.insert(randint(1, len(self.in_ring)-1), edge)
             self.out_ring.remove(edge)
     
 class Population :
@@ -66,7 +63,9 @@ class Population :
         return best
 
 def mutate(ring, rate):
-    for i in range(len(ring.in_ring)):
+    upper_limit_in = len(ring.in_ring)-1
+    upper_limit_out = len(ring.out_ring)-1
+    for i in range(1,upper_limit_in):
         if random() < rate:
             if random() < 0.5:
                 selected = sample(ring.in_ring[1:-1], 1)
@@ -74,10 +73,14 @@ def mutate(ring, rate):
             else:
                 selected = ring.in_ring[i]
                 ring.switch(selected)
-    for i in range(len(ring.out_ring)):
+                upper_limit_in -= 1
+                upper_limit_out += 1
+    for i in range(upper_limit_out):
         if random() < rate:
             selected = ring.out_ring[i]
             ring.switch(selected)
+            upper_limit_in += 1
+            upper_limit_out -= 1
 def select(population, nbr):
     return Population(sample(population.ring_stars, nbr)).get_best()
 
@@ -98,8 +101,9 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         #new_gen.add(child)
     
     for i in range(old_pop//2, old_pop):
-        
+        print("Avant: ", new_gen.ring_stars[i].in_ring)
         mutate(new_gen.ring_stars[i], rate)
+        print("Après: ", new_gen.ring_stars[i].in_ring)
 
     return new_gen
 
@@ -118,10 +122,6 @@ def crossover(ring_star1,ring_star2):
     new_ring_star.in_ring = [i for i in new_ring_star.in_ring if i]
     
     new_ring_star.out_ring = [i for i in range(2,len(ring_star1.in_ring)+len(ring_star1.out_ring)) if i not in new_ring_star.in_ring]
-
-    print(new_ring_star.in_ring)
-    print(ring_star1)
-    print(ring_star2)
     
     return new_ring_star
 

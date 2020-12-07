@@ -120,17 +120,15 @@ def crossover(ring_star1,ring_star2):
 if __name__ == '__main__':
     pop_size = 500
     tourn_size = int(pop_size/4)
-    mut_rate = 0.05
+    mut_rate = 0.25
     elit = 4
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
-    ring = full_ring(list_ring,[x for x in range(1,len(liste1)+1)],meta=False)
-    no_ring = Ring_star([1,1], cp.deepcopy(ring[1:-1]))
-    all_ring = Ring_star(cp.deepcopy(ring), [])
-    ring_stars = [no_ring, all_ring]
-    for x in range(2,pop_size):
-        child = crossover(no_ring, all_ring)
-        ring_stars.append(child)
+    ring = full_ring(list_ring,[x for x in range(1,len(liste1))],meta=False, Tcoef=0.9)
+    ring_stars = []
+    for x in range(pop_size):
+        ring_stars.append(Ring_star(cp.deepcopy(ring), []))
+
     Pop = Population(ring_stars)
     star = time.time()
     
@@ -139,8 +137,9 @@ if __name__ == '__main__':
     while counter < 10 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
-        best = Pop.get_best()
-        score = Pop.get_best().score
+
+        best_pop = Pop.get_best()
+        score_pop = Pop.get_best().cost(liste1, liste2)
     
         if score_pop < min_score:
             best = best_pop

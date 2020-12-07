@@ -63,14 +63,14 @@ class Population :
         return best
 
 def mutate(ring, rate):
-    for element in ring.in_ring:
-        if random() < rate:
-            if random() < 0.5:
-                if len(ring.in_ring) > 1:
-                    selected = sample(ring.in_ring[1:-1], 1)
-                    ring.swap(element, selected[0])
-            else:
-                ring.switch(element)
+    for element in ring.in_ring[1:-1]:
+        if len(ring.in_ring) > 2:
+            if random() < rate:
+                if random() < 0.5:
+                        selected = sample(ring.in_ring[1:-1], 1)
+                        ring.swap(element, selected[0])
+                else:
+                    ring.switch(element)
     for element in ring.out_ring:
         if random() < rate:
             ring.switch(element)

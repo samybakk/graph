@@ -19,6 +19,7 @@ best_affectation_solution = []
 
 tabu_list = []
 
+#f
 ring_sommet = []
 restant = []
 passed = []

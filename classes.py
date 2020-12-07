@@ -137,8 +137,6 @@ if __name__ == '__main__':
     while counter < 10 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
-        for ring in Pop.ring_stars :
-            print(ring.cost(liste1,liste2),ring.in_ring)
 
         best_pop = Pop.get_best()
         score_pop = Pop.get_best().cost(liste1, liste2)

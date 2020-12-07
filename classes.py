@@ -34,16 +34,17 @@ class Ring_star:
         self.in_ring[index1] = self.in_ring[index2]
         self.in_ring[index2] = tmp
 
-    def switch(self, edge):
-        if edge in self.in_ring:
-            self.in_ring.remove(edge)
-            self.out_ring.append(edge)
-        if edge not in self.in_ring:
-            if edge not in self.out_ring:
-                print(self.in_ring,'\n',self.out_ring)
-                print(edge)
-            self.in_ring.insert(randint(0, len(self.in_ring)), edge)
-            self.out_ring.remove(edge)
+    def switch(self, edges):
+        for edge in edges :
+            if edge in self.in_ring:
+                self.in_ring.remove(edge)
+                self.out_ring.append(edge)
+            if edge not in self.in_ring:
+                if edge not in self.out_ring:
+                    print(self.in_ring,'\n',self.out_ring)
+                    print(edge)
+                self.in_ring.insert(randint(0, len(self.in_ring)), edge)
+                self.out_ring.remove(edge)
     
 class Population :
     def __init__(self,ring_stars):
@@ -57,9 +58,11 @@ class Population :
 
     def get_best(self):
         best = self.ring_stars[0]
+        best_score = best.cost(liste1,liste2)
         for ring_star in self.ring_stars:
-            if ring_star.cost(liste1, liste2) < best.cost(liste1,liste2):
+            if ring_star.cost(liste1, liste2) < best_score:
                 best = ring_star
+                best_score = ring_star.cost(liste1, liste2)
     
         return best
 
@@ -92,7 +95,8 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         #child = crossover(parent_1, parent_2)
         #new_gen.add(child)
     
-    for i in range(old_elit, old_pop):
+    for i in range(len(new_gen.ring_stars)):
+        
         mutate(new_gen.ring_stars[i], rate)
 
     return new_gen
@@ -137,6 +141,7 @@ if __name__ == '__main__':
     counter,min_score,gen = 0,1_000_000,0
     
     while counter < 10 :
+        
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
         score = Pop.get_best().score
     

@@ -114,7 +114,7 @@ def crossover(ring_star1,ring_star2):
     new_ring_star.in_ring = [i for i in new_ring_star.in_ring if i]
 
     new_ring_star.in_ring.append(1)
-    
+
     new_ring_star.out_ring = [i for i in range(2,len(ring_star1.in_ring)+len(ring_star1.out_ring)) if i not in new_ring_star.in_ring]
     
     return new_ring_star
@@ -122,8 +122,8 @@ def crossover(ring_star1,ring_star2):
 if __name__ == '__main__':
     pop_size = 100
     tourn_size = int(pop_size/4)
-    mut_rate = 0.05
-    elit = 4
+    mut_rate = 0.25
+    elit = 2
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
     ring = full_ring(list_ring,[x for x in range(1,len(liste1))],meta=False)
@@ -135,16 +135,19 @@ if __name__ == '__main__':
     star = time.time()
     counter,min_score,gen = 0,1_000_000,0
     
-    while counter < 10 :
+    while counter < 15 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
+        best =Pop.get_best()
         score = Pop.get_best().score
     
         if score < min_score:
             counter, min_score = 0, score
         else:
             counter += 1
-    
+
+
+        print("gen : ",gen,'\nbest : ',best.in_ring,'\ncost : ',score)
         gen += 1
      
      

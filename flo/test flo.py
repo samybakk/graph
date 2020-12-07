@@ -36,7 +36,7 @@ print('problem_size : '+ str(problem_size))
 """------------- parametre de la methode -------------"""
 max_size_tabu = problem_size * (0.5)
 Meta = True
-minute = 0.5
+minute = 5
 
 
 

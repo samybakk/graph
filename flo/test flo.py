@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 start_time = time.time()
 
-ring_cost, affectation_cost = lecture("data2.dat")
+ring_cost, affectation_cost = lecture("data3.dat")
 
 problem_size = len(ring_cost)
 
@@ -221,6 +221,6 @@ with open ("solution.txt","w") as w:
     w.write(" \n")
     w.write("STAR \n")
     for elem in affect_sol_list[h]:
-        w.write(str(affect_sol_list[h][0]) + " " + str(affect_sol_list[h][0]) + " \n")
+        w.write(str(elem[0]) + " " + str(elem[1]) + " \n")
 
     w.write("COST " +str(cost_list[h]) + " \n")

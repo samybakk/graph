@@ -63,24 +63,18 @@ class Population :
         return best
 
 def mutate(ring, rate):
-    upper_limit_in = len(ring.in_ring)-1
-    upper_limit_out = len(ring.out_ring)-1
-    for i in range(1,upper_limit_in):
+    for element in ring.in_ring:
         if random() < rate:
             if random() < 0.5:
-                selected = sample(ring.in_ring[1:-1], 1)
-                ring.swap(ring.in_ring[i], selected[0])
+                if len(ring.in_ring) > 1:
+                    selected = sample(ring.in_ring[1:-1], 1)
+                    ring.swap(element, selected[0])
             else:
-                selected = ring.in_ring[i]
-                ring.switch(selected)
-                upper_limit_in -= 1
-                upper_limit_out += 1
-    for i in range(upper_limit_out):
+                ring.switch(element)
+    for element in ring.out_ring:
         if random() < rate:
-            selected = ring.out_ring[i]
-            ring.switch(selected)
-            upper_limit_in += 1
-            upper_limit_out -= 1
+            ring.switch(element)
+
 def select(population, nbr):
     return Population(sample(population.ring_stars, nbr)).get_best()
 

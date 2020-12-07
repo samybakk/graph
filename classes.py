@@ -124,7 +124,7 @@ if __name__ == '__main__':
     elit = 4
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
-    ring = full_ring(list_ring,[x for x in range(1,len(liste1))],meta=False, Tcoef=0.9)
+    ring = full_ring(list_ring,[x for x in range(1,len(liste1)+1)],meta=False, Tcoef=0.9)
     ring_stars = []
     for x in range(pop_size):
         ring_stars.append(Ring_star(cp.deepcopy(ring), []))

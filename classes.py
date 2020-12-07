@@ -1,7 +1,7 @@
 from flo.full_ring import full_ring
 from utils import lecture
 import copy as cp
-from random import randint, sample, random
+from random import randint, sample, random,uniform
 import time
 
 liste1, liste2 = lecture("data2.dat")
@@ -94,8 +94,8 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         child = crossover(parent_1, parent_2)
         new_gen.add(child)
     
-    for i in range(old_elit, old_pop):
-        mutate(new_gen.ring_stars[i], rate)
+    for i in range(1, len(new_gen.ring_stars)):
+        mutate(new_gen.ring_stars[i],uniform(rate/10,rate))
 
     return new_gen
 
@@ -106,7 +106,7 @@ def crossover(ring_star1,ring_star2):
     new_ring_star.in_ring.append(1)
     for i in range(1, cut_pos1):
         new_ring_star.in_ring.append(ring_star1.in_ring[i])
-    
+
     for i in range(cut_pos2,len(ring_star2.in_ring)-1):
         if ring_star2.in_ring[i] not in new_ring_star.in_ring:
             new_ring_star.in_ring.append(ring_star2.in_ring[i])
@@ -133,23 +133,26 @@ if __name__ == '__main__':
         ring_stars.append(child)
     Pop = Population(ring_stars)
     star = time.time()
-    counter,min_score,gen = 0,1_000_000,0
     
-    while counter < 15 :
+
+    counter, min_score, gen = 0, 100000000, 0
+    while counter < 10 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
         best = Pop.get_best()
         score = Pop.get_best().score
     
-        if score < min_score:
-            counter, min_score = 0, score
+        if score_pop < min_score:
+            best = best_pop
+            counter, min_score = 0, score_pop
+
         else:
             counter += 1
 
 
-        print("gen : ",gen,'\nbest : ',best.in_ring,'\ncost : ',score)
+        print("gen : ",gen,'\nbest : ',best.in_ring,best.out_ring,'\ncost : ',min_score)
         gen += 1
      
      
     duree = round(time.time()-star,4)
-    print('temps écoulé : ',duree,'\nbest sol : ',Pop.get_best().score,Pop.get_best().in_ring,Pop.get_best().out_ring)
+    print('temps écoulé : ',duree,'\nbest sol : ',min_score,best.in_ring,best.out_ring)

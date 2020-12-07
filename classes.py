@@ -4,7 +4,7 @@ import copy as cp
 from random import randint, sample, random,uniform
 import time
 
-liste1, liste2 = lecture("data3.dat")
+liste1, liste2 = lecture("data6.dat")
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):

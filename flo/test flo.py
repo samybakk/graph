@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 start_time = time.time()
 
-ring_cost, affectation_cost = lecture("data3.dat")
+ring_cost, affectation_cost = lecture("data1.dat")
 
 problem_size = len(ring_cost)
 
@@ -36,7 +36,7 @@ print('problem_size : '+ str(problem_size))
 """------------- parametre de la methode -------------"""
 max_size_tabu = problem_size * (0.5)
 Meta = True
-minute = 5
+minute = 15
 
 
 
@@ -123,7 +123,8 @@ while time.time() < start_time +(60 * minute) :
                 passed = []
             else :
                 nbr += 1
-                passed.append(sommet)
+                if sommet not in passed :
+                    passed.append(sommet)
             best_ring_solution = current_ring_solution
             best_affectation_solution = current_affectation_solution
             objectif0 = objectif1
@@ -210,7 +211,9 @@ print('best_ring : ' + str(ring_sol_list[h]))
 print('best_affectation : ' + str(affect_sol_list[h]))
 print('cost : ' + str(cost_list[h]))
 plt.show()
-
+print(problem_size)
+print(len(ring_sol_list[h]))
+print(len(affect_sol_list[h]))
 #probleme plus de solution stockée que sur le graphe
 
 with open ("solution.txt","w") as w:

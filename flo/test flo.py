@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 start_time = time.time()
 
-ring_cost, affectation_cost = lecture("data1.dat")
+ring_cost, affectation_cost = lecture("data8.dat")
 
 problem_size = len(ring_cost)
 
@@ -115,7 +115,8 @@ while time.time() < start_time +(60 * minute) :
             # comme la solution est moins bonne, la solution courante est remplacée la best solutio,n
             current_ring_solution = cp.deepcopy(best_ring_solution)
             current_affectation_solution = cp.deepcopy(best_affectation_solution)
-        # si il est meilleur il devient la nouvelle référence :
+        # si il est meilleur il devient la n
+        # ouvelle référence :
         if objectif1 <= objectif0:
             #print('mieux')
             if objectif1 != objectif0:
@@ -164,7 +165,7 @@ while time.time() < start_time +(60 * minute) :
             objectif0 = evaluation(best_ring_solution,best_affectation_solution,ring_cost,affectation_cost)
             tabu_list = []
             Tcoef = round(uniform(0.5,0.95),1)
-            print(Tcoef)
+            print(time.time()-start_time)
             max_size_tabu = problem_size * Tcoef
             passed = []
             nbr =0

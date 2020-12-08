@@ -7,12 +7,12 @@ import time
 import matplotlib.pyplot as plt
 start_time = time.time()
 
-ring_cost, affectation_cost = lecture("data1.dat")
+ring_cost, affectation_cost = lecture("data4.dat")
 problem_size = len(ring_cost)
 
 """------------- parametre de la methode -------------"""
-max_size_tabu = problem_size * (0.5)
-Meta = True
+max_size_tabu = problem_size * (0.5) #changera aléatoirement par la suite
+Meta = True #change le fait d applique la méthode taboue ou pas sur le sous TSP
 minute = 13
 
 
@@ -181,7 +181,8 @@ while time.time() < start_time +(60 * minute) :
             for i in range(problem_size):
                 ring_sommet.append(i + 1)
 
-            print('REBASE '+ str(jkl) )
+            print('REBASE '+ str(objectif0) )
+            print("--- %s seconds ---" % (time.time() - start_time))
             jkl=0
             #on stock la solution atteinte
 

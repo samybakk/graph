@@ -1,11 +1,39 @@
-from flo.full_ring import full_ring
-from utils import lecture
 import copy as cp
 from random import randint, sample, random,uniform
 import time
-#from flo.test_flo import get_list
+
+def lecture(file_name):
+    ring_cost = []
+    affectation_cost = []
+    with open(file_name) as f:
+        ligne = f.readline()
+        elem = ligne.split()
+        results = map(int, elem)
+        results = list(map(int, results))
+        nbr = results[0]
+        for i in range(nbr):
+            ligne = f.readline()
+            elem = ligne.split()
+            elem[i] = '1000000'
+            results = map(int, elem)
+            results = list(map(int, results))
+            ring_cost.append(results)
+        for i in range(nbr):
+            ligne = f.readline()
+            elem = ligne.split()
+            # on oblige le sommet 1 a être dans le ring
+            if i == 0:
+                elem = ['1000000' for x in elem]
+
+            elem[i] = '1000000'
+            results = map(int, elem)
+            results = list(map(int, results))
+            affectation_cost.append(results)
+
+    return ring_cost, affectation_cost
 
 liste1, liste2 = lecture("data3.dat")
+
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):
@@ -118,34 +146,167 @@ def crossover(ring_star1,ring_star2):
     
     return new_ring_star
 
+
+def lecture(file_name):
+    ring_cost = []
+    affectation_cost = []
+    with open(file_name) as f:
+        ligne = f.readline()
+        elem = ligne.split()
+        results = map(int, elem)
+        results = list(map(int, results))
+        nbr = results[0]
+        for i in range(nbr):
+            ligne = f.readline()
+            elem = ligne.split()
+            elem[i] = '1000000'
+            results = map(int, elem)
+            results = list(map(int, results))
+            ring_cost.append(results)
+        for i in range(nbr):
+            ligne = f.readline()
+            elem = ligne.split()
+            # on oblige le sommet 1 a être dans le ring
+            if i == 0:
+                elem = ['1000000' for x in elem]
+
+            elem[i] = '1000000'
+            results = map(int, elem)
+            results = list(map(int, results))
+            affectation_cost.append(results)
+
+    return ring_cost, affectation_cost
+
+def evaluation(liste_ring,liste_affectation , ring_cost, affectation_cost):
+    """
+
+    :param ring_cost : matrice de cout du ring
+    :param affectation_cost: matrice de cout des affectations
+    :return: COST : le coup de la solution
+    """
+    cost = 0
+
+    for i in range(len(liste_ring)):
+        # evite le indice out of range quand on retombe sur le 1
+        if i != len(liste_ring) - 1:
+            cost += ring_cost[liste_ring[i] - 1][liste_ring[i+1]-1]
+
+
+    for elem in liste_affectation:
+        cost += affectation_cost[elem[0]-1][elem[1]-1]
+
+    return cost
+
+
+def full_ring(ring_cost,ring_sommet, meta ,Tcoef):
+    temp_ring_cost = cp.deepcopy(ring_cost)
+
+    sol = [1]
+    autre = []
+
+    #on calcul les sommet qui sont pas dans le ring
+    for i in range(len(ring_cost)):
+        if i + 1 not in ring_sommet:
+            autre.append(i + 1)
+
+    #on back ce qui rentre pas dans le ring
+    for elem in autre:
+        for temp in range(len(temp_ring_cost[elem-1])):
+            temp_ring_cost[elem-1][temp] = 1000000
+        for temp in temp_ring_cost:
+            temp[elem-1] = 1000000
+
+
+    # on cré le ring
+    for i in range(len(ring_sommet)):
+        # on trouve la meilleur possibilité locale et on met a jour la solution
+        h = temp_ring_cost[sol[-1]-1].index(min(temp_ring_cost[sol[-1]-1]))
+        sol.append(h+1)
+
+        # on corrige la matrice ring_coast pour empecher de cycler
+        for elem in range(len(temp_ring_cost[sol[-2]-1])):
+            temp_ring_cost[sol[-2]-1][elem]= 1000000
+        for elem in temp_ring_cost:
+            elem[sol[-2]-1] = 1000000
+
+    best_sol = cp.deepcopy(sol)
+
+
+    if meta == True :
+        size_tabu = len(ring_sommet) * (Tcoef) +1
+        best_cost = evaluation(best_sol, [], ring_cost, [])
+        tabu = [1]
+        for i in range(len(ring_sommet)**2):
+            ref = randint(1, len(ring_sommet)-1)
+            if ref not in tabu:
+                if ref == 1:
+                    temp = sol[ref]
+                    sol[ref] = sol[ref+1]
+                    sol[ref + 1] = temp
+                    cost = evaluation(sol, [], ring_cost, [])
+                    print('coucou')
+                elif id == len(ring_sommet)-1:
+                    temp = sol[ref]
+                    sol[ref] = sol[ref - 1]
+                    sol[ref - 1] = temp
+                    cost = evaluation(sol, [], ring_cost, [])
+                    print('coucou gf')
+                else:
+
+                    temp = sol[ref]
+                    sol[ref] = sol[ref + 1]
+                    sol[ref + 1] = temp
+                    cost1 = evaluation(sol, [], ring_cost, [])
+                    G1 = sol
+
+                    temp = sol[ref+1]
+                    sol[ref+1] = sol[ref]
+                    sol[ref] = temp
+                    temp = sol[ref]
+                    sol[ref] = sol[ref - 1]
+                    sol[ref - 1] = temp
+                    cost2 = evaluation(sol, [], ring_cost, [])
+
+                    if cost2 >= cost1:
+                        cost = cost1
+                        sol = G1
+
+                    if cost1 > cost2:
+                        cost = cost2
+
+                if cost <= best_cost:
+                    best_cost = cost
+                    best_sol = cp.deepcopy(sol)
+                if cost > best_cost:
+                    tabu.append(ref)
+
+            if len(tabu) > size_tabu:
+                del tabu[1]
+
+    return best_sol
+
 if __name__ == '__main__':
     
-    ring_sol_list,affect_sol_list,cost_list = [],[],[]
-    #ring_sol_list,affect_sol_list,cost_list = get_list()
-    pop_size = 300
+    
+    
+    pop_size = 400
     tourn_size = int(pop_size/4)
-    mut_rate = 0.2
+    mut_rate = 0.1
     elit = 10
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
     ring = full_ring(list_ring,[x for x in range(1,len(liste1)+1)],meta=False, Tcoef=0.9)
     ring_stars = []
-    for x in range(pop_size-len(ring_sol_list)):
+    for x in range(pop_size):
         ring_stars.append(Ring_star(cp.deepcopy(ring), []))
         
-    #ajout des sol de Florent en input
-    for index,ring_sol in enumerate(ring_sol_list):
-        ring_sol.append(1)
-        out_ring_sol_tmp = affect_sol_list[index]
-        out_ring_sol =[edge[0] for edge in out_ring_sol_tmp]
-        ring_stars.append(Ring_star(ring_sol,out_ring_sol))
-
+    
     Pop = Population(ring_stars)
     star = time.time()
     
 
     counter, min_score, gen = 0, 100000000, 1
-    while counter < 1 :
+    while counter < 10 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
 
@@ -178,7 +339,7 @@ if __name__ == '__main__':
         out_ring_txt.append((edge,edge_connec))
     
 
-    with open("solution_gen.txt", "w") as w:
+    with open("Groupe9-Challenge1.txt", "w") as w:
         w.write('RING ' + str(len(best.in_ring)-1) + " \n")
         for elem in best.in_ring[:-1]:
             w.write(str(elem) + ' ')

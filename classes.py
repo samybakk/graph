@@ -5,7 +5,7 @@ from random import randint, sample, random,uniform
 import time
 #from flo.test_flo import get_list
 
-liste1, liste2 = lecture("data2.dat")
+liste1, liste2 = lecture("data3.dat")
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):
@@ -95,7 +95,7 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         child = crossover(parent_1, parent_2)
         new_gen.add(child)
     
-    for i in range(old_elit, len(new_gen.ring_stars)):
+    for i in range(1, len(new_gen.ring_stars)):
         mutate(new_gen.ring_stars[i],uniform(rate/10,rate))
 
     return new_gen
@@ -117,8 +117,6 @@ def crossover(ring_star1,ring_star2):
     new_ring_star.out_ring = [i for i in range(2,len(ring_star1.in_ring)+len(ring_star1.out_ring)) if i not in new_ring_star.in_ring]
     
     return new_ring_star
-
-
 
 if __name__ == '__main__':
     

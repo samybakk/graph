@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 start_time = time.time()
 
-ring_cost, affectation_cost = lecture("data3.dat")
+ring_cost, affectation_cost = lecture("data8.dat")
 
 problem_size = len(ring_cost)
 
@@ -36,7 +36,7 @@ print('problem_size : '+ str(problem_size))
 """------------- parametre de la methode -------------"""
 max_size_tabu = problem_size * (0.5)
 Meta = True
-minute = 0.5
+minute = 15
 
 
 
@@ -115,7 +115,8 @@ while time.time() < start_time +(60 * minute) :
             # comme la solution est moins bonne, la solution courante est remplacée la best solutio,n
             current_ring_solution = cp.deepcopy(best_ring_solution)
             current_affectation_solution = cp.deepcopy(best_affectation_solution)
-        # si il est meilleur il devient la nouvelle référence :
+        # si il est meilleur il devient la n
+        # ouvelle référence :
         if objectif1 <= objectif0:
             #print('mieux')
             if objectif1 != objectif0:
@@ -123,7 +124,8 @@ while time.time() < start_time +(60 * minute) :
                 passed = []
             else :
                 nbr += 1
-                passed.append(sommet)
+                if sommet not in passed :
+                    passed.append(sommet)
             best_ring_solution = current_ring_solution
             best_affectation_solution = current_affectation_solution
             objectif0 = objectif1
@@ -163,7 +165,7 @@ while time.time() < start_time +(60 * minute) :
             objectif0 = evaluation(best_ring_solution,best_affectation_solution,ring_cost,affectation_cost)
             tabu_list = []
             Tcoef = round(uniform(0.5,0.95),1)
-            print(Tcoef)
+            print(time.time()-start_time)
             max_size_tabu = problem_size * Tcoef
             passed = []
             nbr =0
@@ -210,7 +212,9 @@ print('best_ring : ' + str(ring_sol_list[h]))
 print('best_affectation : ' + str(affect_sol_list[h]))
 print('cost : ' + str(cost_list[h]))
 plt.show()
-
+print(problem_size)
+print(len(ring_sol_list[h]))
+print(len(affect_sol_list[h]))
 #probleme plus de solution stockée que sur le graphe
 
 with open ("solution.txt","w") as w:

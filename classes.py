@@ -3,8 +3,9 @@ from utils import lecture
 import copy as cp
 from random import randint, sample, random,uniform
 import time
+#from flo.test_flo import get_list
 
-liste1, liste2 = lecture("data3.dat")
+liste1, liste2 = lecture("data2.dat")
 class Ring_star:
 
     def __init__(self, in_ring, out_ring):
@@ -94,7 +95,7 @@ def evolve(old_gen, rate, tourn_nbr, elit):
         child = crossover(parent_1, parent_2)
         new_gen.add(child)
     
-    for i in range(1, len(new_gen.ring_stars)):
+    for i in range(old_elit, len(new_gen.ring_stars)):
         mutate(new_gen.ring_stars[i],uniform(rate/10,rate))
 
     return new_gen
@@ -117,26 +118,36 @@ def crossover(ring_star1,ring_star2):
     
     return new_ring_star
 
+
+
 if __name__ == '__main__':
-    test = Ring_star([1, 32, 11, 1],[2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51])
-    test_cost = test.cost(liste1,liste2)
-    pop_size = 200
+    
+    ring_sol_list,affect_sol_list,cost_list = [],[],[]
+    #ring_sol_list,affect_sol_list,cost_list = get_list()
+    pop_size = 300
     tourn_size = int(pop_size/4)
-    mut_rate = 0.05
-    elit = 4
+    mut_rate = 0.2
+    elit = 10
 
     list_ring,list_assign = cp.deepcopy(liste1),cp.deepcopy(liste2)
     ring = full_ring(list_ring,[x for x in range(1,len(liste1)+1)],meta=False, Tcoef=0.9)
     ring_stars = []
-    for x in range(pop_size):
+    for x in range(pop_size-len(ring_sol_list)):
         ring_stars.append(Ring_star(cp.deepcopy(ring), []))
+        
+    #ajout des sol de Florent en input
+    for index,ring_sol in enumerate(ring_sol_list):
+        ring_sol.append(1)
+        out_ring_sol_tmp = affect_sol_list[index]
+        out_ring_sol =[edge[0] for edge in out_ring_sol_tmp]
+        ring_stars.append(Ring_star(ring_sol,out_ring_sol))
 
     Pop = Population(ring_stars)
     star = time.time()
     
 
-    counter, min_score, gen = 0, 100000000, 0
-    while counter < 10 :
+    counter, min_score, gen = 0, 100000000, 1
+    while counter < 1 :
         
         Pop = evolve(Pop, mut_rate, tourn_size, elit)
 
@@ -157,3 +168,25 @@ if __name__ == '__main__':
      
     duree = round(time.time()-star,4)
     print('temps écoulé : ',duree,'\nbest sol : ',min_score,best.in_ring,best.out_ring)
+    out_ring_txt = []
+    for edge in best.out_ring :
+        assign_list = []
+        for index, assign in enumerate(liste2[edge - 1]):
+            if index + 1 in best.in_ring:
+                assign_list.append(assign)
+            else :
+                assign_list.append(10000000)
+        edge_connec = assign_list.index(min(assign_list))+1
+        out_ring_txt.append((edge,edge_connec))
+    
+
+    with open("solution_gen.txt", "w") as w:
+        w.write('RING ' + str(len(best.in_ring)-1) + " \n")
+        for elem in best.in_ring[:-1]:
+            w.write(str(elem) + ' ')
+        w.write(" \n")
+        w.write("STAR \n")
+        for elem in out_ring_txt:
+            w.write(str(elem[0]) + " " + str(elem[1]) + " \n")
+    
+        w.write("COST " + str(min_score) + " \n")

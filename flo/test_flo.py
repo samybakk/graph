@@ -224,3 +224,6 @@ with open ("solution.txt","w") as w:
         w.write(str(elem[0]) + " " + str(elem[1]) + " \n")
 
     w.write("COST " +str(cost_list[h]) + " \n")
+
+def get_list():
+    return ring_sol_list,affect_sol_list,cost_list
